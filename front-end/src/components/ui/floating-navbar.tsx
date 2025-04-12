@@ -8,7 +8,13 @@ import {
 } from "motion/react";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import { IconHome, IconMessage, IconUser } from "@tabler/icons-react";
+import {
+  IconHome,
+  IconBook,
+  IconPlayerPlay,
+  IconTrophy,
+  IconUser,
+} from "@tabler/icons-react";
 
 const navItems = [
   {
@@ -19,22 +25,24 @@ const navItems = [
   {
     name: "Learn",
     link: "/learn",
-    icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    icon: <IconBook className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
   {
     name: "Play",
     link: "/play",
-    icon: <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    icon: (
+      <IconPlayerPlay className="h-4 w-4 text-neutral-500 dark:text-white" />
+    ),
   },
   {
     name: "Awards",
     link: "/awards",
-    icon: <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    icon: <IconTrophy className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
   {
     name: "About",
     link: "/about",
-    icon: <IconMessage className="h-4 w-4 text-neutral-500 dark:text-white" />,
+    icon: <IconUser className="h-4 w-4 text-neutral-500 dark:text-white" />,
   },
 ];
 
