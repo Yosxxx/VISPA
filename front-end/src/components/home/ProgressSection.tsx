@@ -9,7 +9,7 @@ const stats = [
 
 const ProgressSection = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col md:flex-row md:items-center md:justify-between">
+    <div className="max-w-4xl mx-auto py-6 flex flex-col md:flex-row md:items-center md:justify-between my-24 ">
       <div className="mb-4 md:mb-0 text-center md:text-left">
         <h2 className="text-2xl font-bold text-black dark:text-white">
           Your Progress
