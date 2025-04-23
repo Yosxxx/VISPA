@@ -17,7 +17,7 @@ const HeroSection = () => {
             and engaging challenges
           </p>
           <Button size="lg" asChild>
-            <Link href="/home">Start Learning Now</Link>
+            <Link href="/learn">Start Learning Now</Link>
           </Button>
         </div>
 

@@ -44,7 +44,7 @@ const items = [
     title: "Beginner Course",
     description: "Learn the alphabet and numbers in sign language.",
     header: <Skeleton />,
-    links: "course1",
+    links: "/learn_start",
   },
   {
     title: "Intermediate Course",
