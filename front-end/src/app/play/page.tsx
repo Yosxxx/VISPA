@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Strings } from "@/constants/Strings";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
+import { IconCameraOff } from "@tabler/icons-react";
 
 const Camera: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -22,6 +23,9 @@ const Camera: React.FC = () => {
   const [targetStringIndex, setTargetStringIndex] = useState<number>(0);
   const [Points, setPoints] = useState<number>(0);
 
+  const [isCameraOn, setIsCameraOn] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     if (indexList >= targetString.length) {
       setTargetStringIndex((i) => i + 1);
@@ -36,7 +40,6 @@ const Camera: React.FC = () => {
     setTargetString(exampleString[targetStringIndex]);
   }, [targetStringIndex]);
 
-  // Timer-based string validation logic
   useEffect(() => {
     if (previousValueRef.current !== HandPrediction) {
       previousValueRef.current = HandPrediction;
@@ -61,8 +64,6 @@ const Camera: React.FC = () => {
   }, [HandPrediction]);
 
   useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
     const sendFrameToFlask = async () => {
       if (videoRef.current && canvasRef.current) {
         const canvas = document.createElement("canvas");
@@ -100,49 +101,55 @@ const Camera: React.FC = () => {
       }
     };
 
-    const startInterval = () => {
-      intervalId = setInterval(sendFrameToFlask, 500); // 2 frames per second
-    };
-
-    const startWebcam = async () => {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-        });
-        if (videoRef.current) {
-          videoRef.current.srcObject = stream;
-          videoRef.current.onloadeddata = () => {
-            if (canvasRef.current && videoRef.current) {
-              canvasRef.current.width = videoRef.current.videoWidth;
-              canvasRef.current.height = videoRef.current.videoHeight;
-            }
-            startInterval();
-          };
+    if (isCameraOn) {
+      const startCamera = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+          });
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.onloadeddata = () => {
+              if (canvasRef.current && videoRef.current) {
+                canvasRef.current.width = videoRef.current.videoWidth;
+                canvasRef.current.height = videoRef.current.videoHeight;
+              }
+            };
+          }
+          intervalRef.current = setInterval(sendFrameToFlask, 500);
+        } catch (error) {
+          console.error("Error accessing webcam:", error);
         }
-      } catch (error) {
-        console.error("Error accessing webcam:", error);
-      }
-    };
+      };
 
-    startWebcam();
-
-    return () => {
-      if (intervalId) clearInterval(intervalId);
+      startCamera();
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current);
       if (videoRef.current?.srcObject) {
         (videoRef.current.srcObject as MediaStream)
           .getTracks()
           .forEach((track) => track.stop());
+        videoRef.current.srcObject = null;
       }
+    }
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, []);
+  }, [isCameraOn]);
+
+  const toggleCamera = () => {
+    console.log("Camera toggled");
+    setIsCameraOn((prev) => !prev);
+  };
 
   return (
     <div className="relative w-full">
       <Navbar />
       <FloatingNavbar />
-      <div className="my-12 flex flex-col justify-center items-center">
+      <div className="mt-12 flex flex-col justify-center items-center">
         <h3 className="text-xl text-black dark:text-white text-center md:text-left max-w-3/4">
-          Predict The Word
+          Sign The Word
         </h3>
         <div className="my-5 text-xl font-bold">
           {targetString.map((char, index) => (
@@ -157,25 +164,32 @@ const Camera: React.FC = () => {
           ))}
         </div>
       </div>
-      <div className="flex items-center justify-center">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          className="w-sm rounded-lg items-center md:w-2xl"
-        />
-        <canvas
-          ref={canvasRef}
-          style={{
-            backgroundColor: "transparent",
-            position: "absolute",
-            top: 0,
-            left: 0,
-            height: "100%",
-            width: "auto",
-          }}
-        />
+
+      <div className="flex items-center justify-center w-sm md:w-2xl mx-auto">
+        {isCameraOn ? (
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            className="w-full rounded-lg items-center "
+          />
+        ) : (
+          <div className="w-full h-52 md:h-96 bg-gray-100 rounded-lg shadow-lg flex justify-center items-center">
+            <IconCameraOff size={100} className="w-full items-center" />
+          </div>
+        )}
       </div>
+      <div className="flex justify-center mt-8">
+        <button
+          onClick={toggleCamera}
+          className={` text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition ${
+            isCameraOn ? "bg-red-500" : "bg-green-500"
+          }`}
+        >
+          {isCameraOn ? "Turn Camera Off" : "Turn Camera On"}
+        </button>
+      </div>
+
       <div className="flex items-center justify-center">
         <h2 className="text-3xl font-bold text-black dark:text-white py-5 text-center md:text-left max-w-3/4">
           {HandPrediction}
