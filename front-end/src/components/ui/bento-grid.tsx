@@ -37,11 +37,11 @@ export const BentoGridItem = ({
   return (
     <div
       className={cn(
-        "group/bento mx-auto max-w-[18rem] md:max-w-7xl shadow-input row-span-1 flex flex-col justify-between space-y-4 rounded-xl border border-neutral-200 bg-white p-4 transition duration-200 hover:shadow-xl dark:border-white/[0.2] dark:bg-black dark:shadow-none",
+        "group/bento mx-auto max-w-[18rem] md:max-w-7xl shadow-input row-span-1 flex flex-col justify-between  rounded-xl border border-neutral-200 bg-white p-4 transition duration-200 hover:shadow-xl dark:border-white/[0.2] dark:bg-black dark:shadow-none",
         className
       )}
     >
-      {header}
+      <div>{header}</div>
       <div className="transition duration-200 group-hover/bento:translate-x-2">
         <div className="mt-2 mb-2 font-sans font-bold text-neutral-600 dark:text-neutral-200">
           {title}
@@ -49,7 +49,7 @@ export const BentoGridItem = ({
         <div className="font-sans text-xs font-normal text-neutral-600 dark:text-neutral-300">
           {description}
         </div>
-        <div className="py-3 text-right">
+        <div className="text-right">
           <Button asChild>
             <Link href={links!}>Continue</Link>
           </Button>

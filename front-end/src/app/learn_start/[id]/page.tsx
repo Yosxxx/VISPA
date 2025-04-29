@@ -5,10 +5,43 @@ import Navbar from "@/components/ui/navbar";
 import VideoComponent from "@/components/ui/video-component";
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useState, useEffect } from "react";
+
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+
+interface Course {
+  id: number;
+  course_name: string;
+  description: string;
+  dificulty: string;
+  length: number;
+  video: string;
+}
 
 export default function DriveVideoPage() {
-  const videoURL =
-    "https://1drv.ms/v/c/25890f79e0c78eb6/IQRyWjKQVPYgQIGykaRMWogNAT7utd1qvR5ebmR3BTuTWNY";
+  const { id } = useParams();
+  const [courses, setCourses] = useState<Course | null>(null);
+  const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    async function fetchCourses() {
+      let { data, error } = await supabase
+        .from("MsCourses")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching courses:", error.message);
+      } else {
+        setCourses(data || []);
+      }
+    }
+
+    fetchCourses();
+  }, [supabase]);
+
   return (
     <div className="relative w-full">
       <Navbar />
@@ -18,11 +51,11 @@ export default function DriveVideoPage() {
           Learn
         </h3>
         <h2 className="text-3xl font-bold text-black dark:text-white py-5 text-center md:text-left max-w-3/4">
-          Alphabet Basics
+          {courses?.course_name}
         </h2>
       </div>
       <div className="flex justify-center ">
-        <VideoComponent src={videoURL} className="w-2xl" />
+        <VideoComponent src={courses?.video} className="w-2xl" />
       </div>
 
       <Link href="/learn_question">

@@ -3,6 +3,7 @@ import React from "react";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
 import CourseGridSection from "@/components/learn/courseGridSection";
+import { useParams } from "next/navigation";
 
 export default function Home() {
   return (
