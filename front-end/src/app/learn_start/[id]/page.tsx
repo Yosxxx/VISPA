@@ -58,7 +58,7 @@ export default function DriveVideoPage() {
         <VideoComponent src={courses?.video} className="w-2xl" />
       </div>
 
-      <Link href="/learn_question">
+      <Link href={`/learn_question/${id}`}>
         <div className="my-12 flex flex-row justify-center items-center">
           <h2 className="text-3xl font-bold text-black dark:text-white px-5 text-center md:text-left max-w-3/4">
             Next
