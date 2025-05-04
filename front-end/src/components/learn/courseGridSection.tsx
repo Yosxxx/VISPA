@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { BentoGridItem } from "../ui/bento-grid";
+import { IconClockHour1 } from "@tabler/icons-react";
+import { IconBook } from "@tabler/icons-react";
 
 export const dynamic = "force-dynamic"; // if you want fresh SSR every time
 
@@ -89,12 +91,12 @@ const CourseDescription = ({
   return (
     <div className="text-sm text-gray-600 dark:text-gray-400 space-y-4">
       <div>{description}</div>
-      <div>
-        <strong>Difficulty:</strong>
+      <div className="flex items-center space-x-2">
+        <IconBook />
         <span className={difficultyColor}> {difficulty}</span>
       </div>
-      <div>
-        <strong>Length:</strong> {length}
+      <div className="flex items-center space-x-2">
+        <IconClockHour1 /> <span>{length}</span>
       </div>
     </div>
   );

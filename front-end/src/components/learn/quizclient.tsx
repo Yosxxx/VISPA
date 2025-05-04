@@ -64,9 +64,9 @@ export default function QuizClient({
         </h2>
 
         <main className="flex items-center mt-10 justify-center bg-gray-50 p-4">
-          <div className="flex justify-center bg-white shadow-lg rounded-lg p-6 max-w-7xl gap-6">
+          <div className="flex justify-center flex-col md:flex-row bg-white shadow-lg rounded-lg p-6 max-w-7xl gap-6">
             <div className="flex justify-center">
-              <VideoComponent src={current?.video} className="w-xl" />
+              <VideoComponent src={current?.video} className="w-md md:w-xl" />
             </div>
 
             <div>

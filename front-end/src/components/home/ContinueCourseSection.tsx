@@ -11,9 +11,15 @@ import {
   IconTableColumn,
 } from "@tabler/icons-react";
 
-export default function ContinueCourseSection() {
+interface ContinueCourseSectionProps {
+  className?: string;
+}
+
+export default function ContinueCourseSection({
+  className,
+}: ContinueCourseSectionProps) {
   return (
-    <div className="my-24">
+    <div className={`${className}`}>
       <h2 className="text-2xl font-bold text-black dark:text-white max-w-4xl mx-auto my-5 text-center md:text-left">
         Continue Lesson
       </h2>

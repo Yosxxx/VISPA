@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const Navbar: React.FC = () => {
   return (
@@ -24,13 +25,15 @@ const Navbar: React.FC = () => {
 
       {/* Profile Picture */}
       <div className="flex items-center rounded-full">
-        <Image
-          src="/Image/profile-picture.jpg"
-          alt="Profile Picture"
-          width={40}
-          height={40}
-          className="rounded-full border border-gray-300"
-        />
+        <Link href="/profile" className="flex items-center rounded-full">
+          <Image
+            src="/Image/profile-picture.jpg"
+            alt="Profile Picture"
+            width={40}
+            height={40}
+            className="rounded-full border border-gray-300"
+          />
+        </Link>
       </div>
     </nav>
   );

@@ -49,7 +49,7 @@ export default async function DriveVideoPage({
         </h2>
       </div>
       <div className="flex justify-center ">
-        <VideoComponent src={course.video} className="w-2xl" />
+        <VideoComponent src={course.video} className="w-md md:w-2xl" />
       </div>
 
       <Link href={`/learn_question/${params.id}`}>
