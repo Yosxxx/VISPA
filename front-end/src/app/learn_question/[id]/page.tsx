@@ -11,6 +11,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { useEffect } from "react";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const videoURL =
   "https://1drv.ms/v/c/25890f79e0c78eb6/IQRyWjKQVPYgQIGykaRMWogNAT7utd1qvR5ebmR3BTuTWNY"; //Link video
@@ -34,7 +35,9 @@ export default function QuizPage() {
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [questions, setQuestions] = useState<Question[]>([]);
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [finished, setfinished] = useState<boolean>(false);
   const supabase = createClientComponentClient();
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchQuestion() {
@@ -62,7 +65,9 @@ export default function QuizPage() {
   };
 
   const handleNextQuestion = () => {
-    if (isCorrect == true) {
+    if (isCorrect == true && questionIndex >= questions.length - 1) {
+      setfinished(true);
+    } else if (isCorrect == true) {
       setQuestionIndex((prevIndex) => prevIndex + 1);
       setSelected(null);
       setAnswered(false);
@@ -70,10 +75,14 @@ export default function QuizPage() {
     }
   };
 
+  useEffect(() => {
+    if (finished) {
+      router.push(`/learn_finish/${id}`);
+    }
+  }, [finished, router]);
+
   return (
-    <div className="relative w-full">
-      <Navbar />
-      <FloatingNavbar />
+    <div className="relative w-full flex items-center justify-center h-screen">
       <div className="flex flex-col justify-center items-center">
         <h2 className="text-3xl font-bold text-black dark:text-white mt-10 text-center md:text-left max-w-3/4">
           {questions[questionIndex]?.MsCourses.course_name}
@@ -95,15 +104,17 @@ export default function QuizPage() {
               </h2>
 
               <div className="space-y-3">
-                {questions[questionIndex]?.options.option.map((option) => (
-                  <button
-                    key={option}
-                    onClick={() => {
-                      setSelected(option);
-                      setIsCorrect(null);
-                      setAnswered(false);
-                    }}
-                    className={`w-full text-left px-4 py-3 rounded-lg border transition-all
+                {questions[questionIndex]?.options.option.map((option, idx) => {
+                  const optionLetter = String.fromCharCode(65 + idx);
+                  return (
+                    <button
+                      key={option}
+                      onClick={() => {
+                        setSelected(option);
+                        setIsCorrect(null);
+                        setAnswered(false);
+                      }}
+                      className={`w-full text-left px-4 py-3 rounded-lg border transition-all
                         ${
                           selected === option
                             ? "bg-blue-100 border-blue-500 text-blue-800 font-semibold"
@@ -120,11 +131,12 @@ export default function QuizPage() {
                               : ""
                           }
                       `}
-                  >
-                    <span className="font-medium mr-2">{option}.</span>
-                    {option}
-                  </button>
-                ))}
+                    >
+                      <span className="font-medium mr-2">{optionLetter}.</span>
+                      {option}
+                    </button>
+                  );
+                })}
               </div>
 
               {answered && (

@@ -2,15 +2,8 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import { useState, useEffect } from "react";
 import { BentoGrid, BentoGridItem } from "../ui/bento-grid";
-import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from "@tabler/icons-react";
+import Image from "next/image";
+
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface Course {
@@ -19,6 +12,7 @@ interface Course {
   description: string;
   dificulty: string;
   length: number;
+  image: string;
 }
 
 export default function courseGridSection() {
@@ -27,7 +21,10 @@ export default function courseGridSection() {
 
   useEffect(() => {
     async function fetchCourses() {
-      let { data, error } = await supabase.from("MsCourses").select("*");
+      let { data, error } = await supabase
+        .from("MsCourses")
+        .select("*")
+        .order("id", { ascending: true });
 
       if (error) {
         console.error("Error fetching courses:", error.message);
@@ -57,18 +54,31 @@ export default function courseGridSection() {
               difficulty: course.dificulty,
               length: `${course.length} minutes`,
             })}
-            header={<Skeleton />}
+            header={<Skeleton src={course.image} />}
             links={`/learn_start/${course.id}`}
             // className={i === 3 || i === 6 ? "md:col-span-2" : ""}
+            className="h-fit"
           />
         ))}
       </div>
     </div>
   );
 }
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
-);
+const Skeleton = ({
+  src,
+  alt = "Loading...",
+}: {
+  src?: string;
+  alt?: string;
+}) => {
+  return src ? (
+    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl overflow-hidden">
+      <img src={src} width="1024" height="auto" />
+    </div>
+  ) : (
+    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 animate-pulse" />
+  );
+};
 
 const CourseDescription = ({
   description,
@@ -89,8 +99,8 @@ const CourseDescription = ({
       : "text-gray-500"; // fallback if unknown
 
   return (
-    <div className="text-sm text-gray-600 dark:text-gray-400 space-y-2">
-      {description}
+    <div className="text-sm text-gray-600 dark:text-gray-400 space-y-4">
+      <div>{description}</div>
       <div>
         <strong>Difficulty:</strong>
         <span className={difficultyColor}> {difficulty}</span>
@@ -101,60 +111,3 @@ const CourseDescription = ({
     </div>
   );
 };
-
-const items = [
-  {
-    title: "Beginner Course",
-    description: "Learn the alphabet and numbers in sign language.",
-    header: <Skeleton />,
-    links: "/learn_start/1",
-  },
-  {
-    title: "Intermediate Course",
-    description: "Build your vocabulary with common everyday words.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Advanced Course",
-    description: "Master complex words and develop conversational skills.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Beginner Course",
-    description: "Learn the alphabet and numbers in sign language.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Intermediate Course",
-    description: "Build your vocabulary with common everyday words.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Advanced Course",
-    description: "Master complex words and develop conversational skills.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Beginner Course",
-    description: "Learn the alphabet and numbers in sign language.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Intermediate Course",
-    description: "Build your vocabulary with common everyday words.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Advanced Course",
-    description: "Master complex words and develop conversational skills.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-];
