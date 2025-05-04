@@ -1,10 +1,9 @@
-"use client";
-
+// app/course-completion/[id]/page.tsx
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import Link from "next/link";
 
 interface Course {
   id: number;
@@ -12,29 +11,25 @@ interface Course {
   points: number;
 }
 
-export default function CourseCompletionPage() {
-  const router = useRouter();
-  const { id } = useParams();
-  const [courses, setCourses] = useState<Course>({} as Course);
-  const supabase = createClientComponentClient();
+export const dynamic = "force-dynamic"; // ensure SSR on every request
 
-  useEffect(() => {
-    async function fetchCourses() {
-      let { data, error } = await supabase
-        .from("MsCourses")
-        .select("*")
-        .eq("id", id)
-        .single();
+export default async function CourseCompletionPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const supabase = createServerComponentClient({ cookies });
 
-      if (error) {
-        console.error("Error fetching courses:", error.message);
-      } else {
-        setCourses(data || []);
-      }
-    }
+  const { data: course, error } = await supabase
+    .from("MsCourses")
+    .select("*")
+    .eq("id", params.id)
+    .single();
 
-    fetchCourses();
-  }, [supabase]);
+  if (error || !course) {
+    console.error("Error fetching course:", error?.message);
+    redirect("/error"); // or show fallback message
+  }
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50 px-4 text-center">
@@ -45,16 +40,21 @@ export default function CourseCompletionPage() {
         <p className="text-gray-800 text-lg">
           You have successfully completed the course
         </p>
-        <h1 className="text-4xl font-bold text-black">{courses.course_name}</h1>
+        <h1 className="text-4xl font-bold text-black">{course.course_name}</h1>
         <p className="text-green-600 font-semibold text-lg">
-          {courses.points} points added to your profile
+          {course.points} points added to your profile
         </p>
-        <Button
-          onClick={() => router.push("/home")}
-          className="bg-blue-600 text-white text-lg px-6 py-3 rounded-lg hover:bg-blue-700 transition hover:cursor-pointer"
-        >
-          Back to Home
-        </Button>
+        <form action="/home">
+          <Button
+            size="xl"
+            className="mx-auto  bg-blue-500 text-white py-3 rounded-lg transition-all hover:bg-blue-600 hover:cursor-pointer"
+            asChild
+          >
+            <Link href="/home" className="text-2xl">
+              Back to Home
+            </Link>
+          </Button>
+        </form>
       </div>
     </div>
   );

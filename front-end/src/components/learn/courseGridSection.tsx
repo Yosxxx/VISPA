@@ -1,10 +1,7 @@
-import { cn } from "@/lib/utils";
-import React from "react";
-import { useState, useEffect } from "react";
-import { BentoGrid, BentoGridItem } from "../ui/bento-grid";
-import Image from "next/image";
+import { createClient } from "@supabase/supabase-js";
+import { BentoGridItem } from "../ui/bento-grid";
 
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+export const dynamic = "force-dynamic"; // if you want fresh SSR every time
 
 interface Course {
   id: number;
@@ -15,37 +12,29 @@ interface Course {
   image: string;
 }
 
-export default function courseGridSection() {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const supabase = createClientComponentClient();
+export default async function CourseGridSection() {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
-  useEffect(() => {
-    async function fetchCourses() {
-      let { data, error } = await supabase
-        .from("MsCourses")
-        .select("*")
-        .order("id", { ascending: true });
+  const { data: courses, error } = await supabase
+    .from("MsCourses")
+    .select("*")
+    .order("id", { ascending: true });
 
-      if (error) {
-        console.error("Error fetching courses:", error.message);
-      } else {
-        setCourses(data || []);
-      }
-    }
+  if (error) {
+    console.error("Error fetching courses:", error.message);
+    return <p>Failed to load courses.</p>;
+  }
 
-    fetchCourses();
-  }, [supabase]);
   return (
     <div className="my-12 flex flex-col justify-center items-center">
       <h2 className="text-3xl font-bold text-black dark:text-white my-5 text-center md:text-left max-w-3/4">
         Courses
       </h2>
       <div className="mx-auto grid max-w-3/4 grid-cols-1 gap-6 md:auto-rows-[18rem] md:grid-cols-3  my-12">
-        {/* <h2 className="text-3xl font-bold text-black dark:text-white max-w-4xl mx-auto my-5 text-center md:text-left justify-around">
-        Continue Lesson
-      </h2> */}
-
-        {courses.map((course, i) => (
+        {courses?.map((course, i) => (
           <BentoGridItem
             key={course.id}
             title={course.course_name}
@@ -56,7 +45,6 @@ export default function courseGridSection() {
             })}
             header={<Skeleton src={course.image} />}
             links={`/learn_start/${course.id}`}
-            // className={i === 3 || i === 6 ? "md:col-span-2" : ""}
             className="h-fit"
           />
         ))}

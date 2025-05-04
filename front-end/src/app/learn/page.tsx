@@ -1,16 +1,19 @@
-"use client";
 import React from "react";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
 import CourseGridSection from "@/components/learn/courseGridSection";
-import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+import CourseGridLoading from "@/components/learn/courseGridLoading";
 
 export default function Home() {
   return (
     <div className="relative  w-full">
       <Navbar />
       <FloatingNavbar />
-      <CourseGridSection />
+      <Suspense fallback={<CourseGridLoading />}>
+        <CourseGridSection />
+      </Suspense>
     </div>
   );
 }

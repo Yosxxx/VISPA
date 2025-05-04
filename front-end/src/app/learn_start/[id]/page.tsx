@@ -1,14 +1,10 @@
-"use client";
-import React from "react";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
 import VideoComponent from "@/components/ui/video-component";
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useState, useEffect } from "react";
-
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
 
 interface Course {
   id: number;
@@ -19,28 +15,26 @@ interface Course {
   video: string;
 }
 
-export default function DriveVideoPage() {
-  const { id } = useParams();
-  const [courses, setCourses] = useState<Course | null>(null);
-  const supabase = createClientComponentClient();
+export default async function DriveVideoPage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const supabase = createServerComponentClient({ cookies });
+  const { data: course, error } = await supabase
+    .from("MsCourses")
+    .select("*")
+    .eq("id", params.id)
+    .single();
 
-  useEffect(() => {
-    async function fetchCourses() {
-      let { data, error } = await supabase
-        .from("MsCourses")
-        .select("*")
-        .eq("id", id)
-        .single();
-
-      if (error) {
-        console.error("Error fetching courses:", error.message);
-      } else {
-        setCourses(data || []);
-      }
-    }
-
-    fetchCourses();
-  }, [supabase]);
+  if (error) {
+    console.error("Error fetching course:", error.message);
+    return (
+      <div className="text-center mt-10 text-red-500 font-semibold">
+        Failed to load course
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full">
@@ -51,14 +45,14 @@ export default function DriveVideoPage() {
           Learn
         </h3>
         <h2 className="text-3xl font-bold text-black dark:text-white py-5 text-center md:text-left max-w-3/4">
-          {courses?.course_name}
+          {course.course_name}
         </h2>
       </div>
       <div className="flex justify-center ">
-        <VideoComponent src={courses?.video} className="w-2xl" />
+        <VideoComponent src={course.video} className="w-2xl" />
       </div>
 
-      <Link href={`/learn_question/${id}`}>
+      <Link href={`/learn_question/${params.id}`}>
         <div className="my-12 flex flex-row justify-center items-center">
           <h2 className="text-3xl font-bold text-black dark:text-white px-5 text-center md:text-left max-w-3/4">
             Next

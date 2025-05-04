@@ -6,6 +6,7 @@ import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
 import { IconCameraOff } from "@tabler/icons-react";
 
+// Main Camera Component
 const Camera: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -19,26 +20,56 @@ const Camera: React.FC = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const exampleString = Strings;
-  const [targetString, setTargetString] = useState<string[]>(exampleString[0]);
+  const [availableIndices, setAvailableIndices] = useState<number[]>([]);
+  const [targetString, setTargetString] = useState<string[]>([]);
   const [targetStringIndex, setTargetStringIndex] = useState<number>(0);
   const [Points, setPoints] = useState<number>(0);
 
   const [isCameraOn, setIsCameraOn] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+  // Function to pick a random index that hasn't been used yet
+  const pickRandomIndex = () => {
+    const randomIndex = Math.floor(Math.random() * availableIndices.length);
+    return availableIndices.splice(randomIndex, 1)[0]; // Remove the picked index from the available indices
+  };
+
+  // Set initial random string on mount
   useEffect(() => {
-    if (indexList >= targetString.length) {
-      setTargetStringIndex((i) => i + 1);
-      setIndexList(0);
-      setPrevIndexList(-1);
-      setPoints((p) => p + 100);
-      setDisplayList([]);
-    }
-  }, [indexList]);
+    const initialIndices = Array.from(
+      { length: exampleString.length },
+      (_, i) => i
+    );
+    setAvailableIndices(initialIndices); // Create a list of available indices
+  }, []);
 
   useEffect(() => {
-    setTargetString(exampleString[targetStringIndex]);
-  }, [targetStringIndex]);
+    if (availableIndices.length > 0) {
+      const randomIndex = pickRandomIndex();
+      setTargetString(exampleString[randomIndex]);
+      setTargetStringIndex(randomIndex);
+    } else {
+      console.log("No more strings available.");
+      // Optional: Reset or finish the game
+    }
+  }, [availableIndices]);
+
+  useEffect(() => {
+    if (indexList >= targetString.length) {
+      if (availableIndices.length > 0) {
+        const randomIndex = pickRandomIndex();
+        setTargetString(exampleString[randomIndex]);
+        setTargetStringIndex(randomIndex);
+        setIndexList(0);
+        setPrevIndexList(-1);
+        setPoints((p) => p + 100);
+        setDisplayList([]);
+      } else {
+        console.log("No more strings available.");
+        // Optional: Reset, reshuffle, or end
+      }
+    }
+  }, [indexList, availableIndices]);
 
   useEffect(() => {
     if (previousValueRef.current !== HandPrediction) {
