@@ -1,11 +1,12 @@
 import Navbar from "@/components/ui/navbar";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import ProfileStats from "@/components/profile/ProfileStats";
+
 import ProfilePicture from "@/components/profile/ProfilePicture";
 import ContinueCourseSection from "@/components/home/ContinueCourseSection";
 import FooterSection from "@/components/home/FooterSection";
 
-export default function profile() {
+export default async function Profile() {
   return (
     <div className="relative  w-full h-screen">
       <Navbar />

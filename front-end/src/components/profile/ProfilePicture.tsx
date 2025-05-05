@@ -1,24 +1,67 @@
-// components/ProfileCard.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { supabase } from "../../../lib/supabaseClient";
 
 export default function ProfilePicture() {
+  const [profile, setProfile] = useState<{
+    name: string;
+    profile_picture: string;
+    created_at: string;
+  } | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        console.error("Error getting user:", userError);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("MsUser")
+        .select("name, profile_picture, created_at")
+        .eq("uuid", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        return;
+      }
+
+      setProfile(data);
+    };
+
+    fetchProfile();
+  }, [supabase]);
+
+  if (!profile) return <p className="text-center p-6">Loading...</p>;
+
+  const joinedDate = new Date(profile.created_at).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+  });
+
   return (
-    <section className="flex flex-col items-center text-center p-6  dark:bg-gray-900 rounded-lg max-w-sm mx-auto">
+    <section className="flex flex-col items-center text-center p-6 dark:bg-gray-900 rounded-lg max-w-sm mx-auto">
       <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
 
       <div className="w-40 h-40 relative mb-4">
-        <Image
-          src="/Image/profile-picture.jpg" // Replace with your actual path
+        <img
+          src={profile.profile_picture || "/Image/default-profile.jpg"}
           alt="Profile Picture"
-          layout="fill"
-          objectFit="cover"
           className="rounded-full border-2 border-white shadow-md"
         />
       </div>
 
-      <h2 className="text-xl font-semibold">hani</h2>
+      <h2 className="text-xl font-semibold">{profile.name}</h2>
       <p className="text-sm text-gray-600 dark:text-gray-400">
-        Joined February 2025
+        Joined {joinedDate}
       </p>
     </section>
   );

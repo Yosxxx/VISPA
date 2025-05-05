@@ -34,11 +34,7 @@ const navItems = [
       <IconPlayerPlay className="h-4 w-4 text-neutral-500 dark:text-white" />
     ),
   },
-  {
-    name: "Awards",
-    link: "/awards",
-    icon: <IconTrophy className="h-4 w-4 text-neutral-500 dark:text-white" />,
-  },
+
   {
     name: "About",
     link: "/about",

@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { supabase } from "../../../../lib/supabaseClient";
 
 interface Course {
   id: number;
@@ -18,8 +19,6 @@ export default async function CourseCompletionPage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createServerComponentClient({ cookies });
-
   const { data: course, error } = await supabase
     .from("MsCourses")
     .select("*")

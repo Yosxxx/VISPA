@@ -1,8 +1,61 @@
-// components/ProfileStats.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { BarChart2, BookOpen, CheckCircle, Flame, Star } from "lucide-react";
+import { supabase } from "../../../lib/supabaseClient";
 
 export default function ProfileStats() {
+  const [stats, setStats] = useState({
+    completed_lessons: 0,
+    total_lessons: 8,
+    signs_learned: 0,
+    total_signs: 16,
+    score: 0,
+    streak_days: 0,
+  });
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        console.error("Failed to get user:", userError);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("MsUser")
+        .select("*")
+        .eq("uuid", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching user stats:", error);
+        return;
+      }
+      console.log(data);
+
+      setStats({
+        completed_lessons: Array.isArray(data?.completed_lessons)
+          ? data.completed_lessons.length
+          : 0,
+        total_lessons: 8,
+        signs_learned: Array.isArray(data?.signs_learned)
+          ? data.signs_learned.length
+          : 0,
+        total_signs: 16,
+        score: data.score ?? 0,
+        streak_days: data.streak_days ?? 0,
+      });
+    };
+
+    fetchUserStats();
+  }, [supabase]);
+
   return (
     <section className="p-6 w-md md:w-xl lg:w-2xl mx-auto space-y-6">
       <div className="space-y-2">
@@ -21,10 +74,19 @@ export default function ProfileStats() {
                 <BookOpen className="w-4 h-4" />
                 <span>Completed Lessons</span>
               </div>
-              <span className="font-semibold">0/8</span>
+              <span className="font-semibold">
+                {stats.completed_lessons}/{stats.total_lessons}
+              </span>
             </div>
-            <Progress value={30} />
-            <span className="text-xs text-gray-500 dark:text-gray-400">0%</span>
+            <Progress
+              value={(stats.completed_lessons / stats.total_lessons) * 100}
+            />
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {((stats.completed_lessons / stats.total_lessons) * 100).toFixed(
+                0
+              )}
+              %
+            </span>
           </div>
 
           {/* Signs Learned */}
@@ -34,10 +96,14 @@ export default function ProfileStats() {
                 <CheckCircle className="w-4 h-4 text-green-600" />
                 <span>Signs Learned</span>
               </div>
-              <span className="font-semibold">0/16</span>
+              <span className="font-semibold">
+                {stats.signs_learned}/{stats.total_signs}
+              </span>
             </div>
-            <Progress value={60} />
-            <span className="text-xs text-gray-500 dark:text-gray-400">0%</span>
+            <Progress value={(stats.signs_learned / stats.total_signs) * 100} />
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {((stats.signs_learned / stats.total_signs) * 100).toFixed(0)}%
+            </span>
           </div>
 
           {/* Score Earned */}
@@ -47,7 +113,7 @@ export default function ProfileStats() {
                 <Star className="w-4 h-4 text-yellow-500" />
                 <span>Score Earned</span>
               </div>
-              <span className="font-semibold">120 pts</span>
+              <span className="font-semibold">{stats.score} pts</span>
             </div>
           </div>
         </div>
@@ -58,7 +124,9 @@ export default function ProfileStats() {
             <Flame className="w-4 h-4 text-purple-600" />
             <span>Current Streak</span>
           </div>
-          <span className="text-purple-600 text-lg font-bold">0 days</span>
+          <span className="text-purple-600 text-lg font-bold">
+            {stats.streak_days} days
+          </span>
         </div>
       </div>
     </section>

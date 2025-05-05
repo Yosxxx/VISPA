@@ -28,6 +28,7 @@ labels_dict = {
 
 @app.route('/detect', methods=['POST'])
 def process_image():
+    print("Received request")
     # Check if an image file was uploaded
     if 'file' not in request.files:
         return jsonify({"error": "No file part"}), 400

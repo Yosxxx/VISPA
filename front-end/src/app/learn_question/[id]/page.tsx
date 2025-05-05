@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "../../../../lib/supabaseClient";
 import QuizClient from "@/components/learn/quizclient";
 interface Question {
   id: number;
@@ -13,8 +13,6 @@ interface Question {
   };
 }
 export default async function Page({ params }: { params: { id: string } }) {
-  const supabase = createServerComponentClient({ cookies });
-
   const { data: questions } = await supabase
     .from("Questions")
     .select("*, MsCourses(course_name)")

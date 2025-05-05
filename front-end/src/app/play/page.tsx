@@ -96,7 +96,7 @@ const Camera: React.FC = () => {
 
   useEffect(() => {
     const sendFrameToFlask = async () => {
-      if (videoRef.current && canvasRef.current) {
+      if (videoRef.current) {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
 
@@ -147,6 +147,7 @@ const Camera: React.FC = () => {
               }
             };
           }
+
           intervalRef.current = setInterval(sendFrameToFlask, 500);
         } catch (error) {
           console.error("Error accessing webcam:", error);

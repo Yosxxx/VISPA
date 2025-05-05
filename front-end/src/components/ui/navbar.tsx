@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
 
       {/* Navigation Links */}
       <div className="flex w-full justify-evenly mx-3 lg:w-1/2 lg:mr-auto">
-        {["Home", "Learn", "Play", "Awards", "About"].map((link) => (
+        {["Home", "Learn", "Play", "About"].map((link) => (
           <a
             key={link}
             href={`/${link.toLowerCase()}`}

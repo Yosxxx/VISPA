@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { BentoGridItem } from "../ui/bento-grid";
 import { IconClockHour1 } from "@tabler/icons-react";
 import { IconBook } from "@tabler/icons-react";
+import { supabase } from "../../../lib/supabaseClient";
 
 export const dynamic = "force-dynamic"; // if you want fresh SSR every time
 
@@ -15,11 +16,6 @@ interface Course {
 }
 
 export default async function CourseGridSection() {
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  );
-
   const { data: courses, error } = await supabase
     .from("MsCourses")
     .select("*")

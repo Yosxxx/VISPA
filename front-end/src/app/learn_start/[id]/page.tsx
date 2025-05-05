@@ -3,7 +3,7 @@ import Navbar from "@/components/ui/navbar";
 import VideoComponent from "@/components/ui/video-component";
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { supabase } from "../../../../lib/supabaseClient";
 import { cookies } from "next/headers";
 
 interface Course {
@@ -20,7 +20,6 @@ export default async function DriveVideoPage({
 }: {
   params: { id: string };
 }) {
-  const supabase = createServerComponentClient({ cookies });
   const { data: course, error } = await supabase
     .from("MsCourses")
     .select("*")

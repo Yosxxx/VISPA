@@ -42,3 +42,4 @@ next-env.d.ts
 
 #API keys
 .env.local
+.venv/
