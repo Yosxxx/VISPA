@@ -1,4 +1,3 @@
-"use client";
 import { createClient } from "../../../../utils/supabase/Client";
 import { addCourseCompletion } from "./action";
 import { redirect } from "next/navigation";
@@ -31,7 +30,7 @@ export default async function CourseCompletionPage(props: {
   }
 
   // ✅ Run this during page rendering (server-side)
-  await addCourseCompletion(course.id);
+  await addCourseCompletion(course.id, course.score);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50 px-4 text-center">

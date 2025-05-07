@@ -1,7 +1,7 @@
 "use server";
 import { createClient } from "../../../../utils/supabase/Server";
 
-export async function addCourseCompletion(courseId: number) {
+export async function addCourseCompletion(courseId: number, points: number) {
   const supabase = createClient();
 
   const {
@@ -16,7 +16,7 @@ export async function addCourseCompletion(courseId: number) {
 
   const { data: userData, error: fetchError } = await (await supabase)
     .from("MsUser")
-    .select("completed_lessons")
+    .select("completed_lessons, points")
     .eq("uuid", user.id)
     .single();
 
@@ -32,9 +32,11 @@ export async function addCourseCompletion(courseId: number) {
     ? [...new Set([...currentCourses, courseId])]
     : [courseId];
 
+  const updatedPoints = (userData.points || 0) + points;
+
   const { error: updateError } = await (await supabase)
     .from("MsUser")
-    .update({ completed_lessons: updatedCourses })
+    .update({ completed_lessons: updatedCourses, points: updatedPoints })
     .eq("uuid", user.id);
 
   if (updateError) {

@@ -38,13 +38,19 @@ export default function ProfileStats() {
         console.error("Error fetching user stats:", error);
         return;
       }
+
+      const { count, error: courseCountError } = await supabase
+        .from("MsCourses")
+        .select("*", { count: "exact", head: true });
+
       console.log(data);
+      console.log(count);
 
       setStats({
         completed_lessons: Array.isArray(data?.completed_lessons)
           ? data.completed_lessons.length
           : 0,
-        total_lessons: 8,
+        total_lessons: count ?? 8,
         signs_learned: Array.isArray(data?.signs_learned)
           ? data.signs_learned.length
           : 0,
@@ -87,23 +93,6 @@ export default function ProfileStats() {
                 0
               )}
               %
-            </span>
-          </div>
-
-          {/* Signs Learned */}
-          <div>
-            <div className="flex justify-between items-center text-sm text-gray-700 dark:text-gray-300 mb-1">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className="w-4 h-4 text-green-600" />
-                <span>Signs Learned</span>
-              </div>
-              <span className="font-semibold">
-                {stats.signs_learned}/{stats.total_signs}
-              </span>
-            </div>
-            <Progress value={(stats.signs_learned / stats.total_signs) * 100} />
-            <span className="text-xs text-gray-500 dark:text-gray-400">
-              {((stats.signs_learned / stats.total_signs) * 100).toFixed(0)}%
             </span>
           </div>
 

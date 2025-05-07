@@ -1,36 +1,42 @@
-import { createClient } from "../../../utils/supabase/Client";
-import { cookies } from "next/headers";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { createClient } from "../../../utils/supabase/Client";
 
-export default async function Navbar() {
+const Navbar: React.FC = () => {
+  const [profileUrl, setProfileUrl] = useState<string | null>(null);
   const supabase = createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  let avatarUrl = "/Image/profile-picture.jpg"; // default fallback
+      if (user) {
+        const { data, error } = await supabase
+          .from("MsUser")
+          .select("name, profile_picture, created_at")
+          .eq("uuid", user.id)
+          .single();
 
-  if (user) {
-    const { data: userData, error } = await supabase
-      .from("MsUser")
-      .select("image")
-      .eq("uuid", user.id)
-      .single();
+        if (data?.profile_picture) {
+          setProfileUrl(data.profile_picture);
+        }
+      }
+      console.log(profileUrl);
+    };
 
-    if (!error && userData?.image) {
-      avatarUrl = userData.image;
-    }
-  }
+    fetchUserProfile();
+  }, []);
 
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
-      {/* Logo */}
       <div className="flex items-center space-x-2">
         <span className="text-xl font-bold">VISPA</span>
       </div>
 
-      {/* Navigation Links */}
       <div className="flex w-full justify-evenly mx-3 lg:w-1/2 lg:mr-auto">
         {["Home", "Learn", "Play", "About"].map((link) => (
           <a
@@ -43,18 +49,19 @@ export default async function Navbar() {
         ))}
       </div>
 
-      {/* Profile Picture */}
       <div className="flex items-center rounded-full">
-        <Link href="/profile" className="flex items-center rounded-full">
-          <Image
-            src={avatarUrl}
+        <Link href="/profile">
+          <img
+            src={profileUrl || "/Image/profile-picture.jpg"}
             alt="Profile Picture"
             width={40}
             height={40}
-            className="rounded-full border border-gray-300 object-cover"
+            className="rounded-full border border-gray-300"
           />
         </Link>
       </div>
     </nav>
   );
-}
+};
+
+export default Navbar;
