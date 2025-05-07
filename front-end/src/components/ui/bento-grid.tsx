@@ -49,7 +49,7 @@ export const BentoGridItem = ({
         <div className="font-sans text-xs font-normal text-neutral-600 dark:text-neutral-300">
           {description}
         </div>
-        <div className="text-right">
+        <div className="text-right pt-5">
           <Button asChild>
             <Link href={links!}>Continue</Link>
           </Button>

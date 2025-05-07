@@ -1,11 +1,9 @@
-// app/course-completion/[id]/page.tsx
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
-import { cookies } from "next/headers";
+"use client";
+import { createClient } from "../../../../utils/supabase/Client";
+import { addCourseCompletion } from "./action";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { createClient } from "../../../../utils/supabase/Client";
-const supabase = createClient();
 
 interface Course {
   id: number;
@@ -15,12 +13,12 @@ interface Course {
 
 export const dynamic = "force-dynamic"; // ensure SSR on every request
 
-export default async function CourseCompletionPage(
-  props: {
-    params: Promise<{ id: string }>;
-  }
-) {
+export default async function CourseCompletionPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const params = await props.params;
+  const supabase = createClient();
+
   const { data: course, error } = await supabase
     .from("MsCourses")
     .select("*")
@@ -29,8 +27,11 @@ export default async function CourseCompletionPage(
 
   if (error || !course) {
     console.error("Error fetching course:", error?.message);
-    redirect("/error"); // or show fallback message
+    redirect("/error");
   }
+
+  // ✅ Run this during page rendering (server-side)
+  await addCourseCompletion(course.id);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50 px-4 text-center">
@@ -45,17 +46,15 @@ export default async function CourseCompletionPage(
         <p className="text-green-600 font-semibold text-lg">
           {course.points} points added to your profile
         </p>
-        <form action="/home">
-          <Button
-            size="xl"
-            className="mx-auto  bg-blue-500 text-white py-3 rounded-lg transition-all hover:bg-blue-600 hover:cursor-pointer"
-            asChild
-          >
-            <Link href="/home" className="text-2xl">
-              Back to Home
-            </Link>
-          </Button>
-        </form>
+        <Button
+          size="xl"
+          className="mx-auto bg-blue-500 text-white py-3 rounded-lg transition-all hover:bg-blue-600 hover:cursor-pointer"
+          asChild
+        >
+          <Link href="/home" className="text-2xl">
+            Back to Home
+          </Link>
+        </Button>
       </div>
     </div>
   );

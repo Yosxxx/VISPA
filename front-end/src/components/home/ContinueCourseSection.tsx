@@ -1,63 +1,98 @@
-import { cn } from "@/lib/utils";
-import React from "react";
+import { createClient } from "../../../utils/supabase/Client";
 import { BentoGrid, BentoGridItem } from "../ui/bento-grid";
-import {
-  IconArrowWaveRightUp,
-  IconBoxAlignRightFilled,
-  IconBoxAlignTopLeft,
-  IconClipboardCopy,
-  IconFileBroken,
-  IconSignature,
-  IconTableColumn,
-} from "@tabler/icons-react";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { IconClockHour1 } from "@tabler/icons-react";
+import { IconBook } from "@tabler/icons-react";
 
 interface ContinueCourseSectionProps {
   className?: string;
 }
 
-export default function ContinueCourseSection({
+export default async function ContinueCourseSection({
   className,
 }: ContinueCourseSectionProps) {
+  const supabase = createClient();
+
+  const { data: courses, error } = await supabase
+    .from("MsCourses")
+    .select("id, course_name, description, image, dificulty, length")
+    .limit(4);
+
+  if (error || !courses) {
+    console.error("Error fetching courses:", error?.message);
+    return <p className="text-center text-red-500">Failed to load courses.</p>;
+  }
+
   return (
-    <div className={`${className}`}>
+    <div className={cn(className)}>
       <h2 className="text-2xl font-bold text-black dark:text-white max-w-4xl mx-auto my-5 text-center md:text-left">
         Continue Lesson
       </h2>
-      <BentoGrid className="max-w-4xl mx-auto">
-        {items.map((item, i) => (
+      <div className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:auto-rows-[18rem] md:grid-cols-3  my-12">
+        {courses.map((course) => (
           <BentoGridItem
-            key={i}
-            title={item.title}
-            description={item.description}
-            header={item.header}
-            links={item.links}
-            // className={i === 3 || i === 6 ? "md:col-span-2" : ""}
+            key={course.id}
+            title={course.course_name}
+            description={CourseDescription({
+              description: course.description,
+              difficulty: course.dificulty,
+              length: `${course.length} minutes`,
+            })}
+            header={<Skeleton src={course.image} />}
+            links={`/learn_start/${course.id}`}
+            className="h-fit"
           />
         ))}
-      </BentoGrid>
+      </div>
     </div>
   );
 }
-const Skeleton = () => (
-  <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
-);
-const items = [
-  {
-    title: "Beginner Course",
-    description: "Learn the alphabet and numbers in sign language.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Intermediate Course",
-    description: "Build your vocabulary with common everyday words.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-  {
-    title: "Advanced Course",
-    description: "Master complex words and develop conversational skills.",
-    header: <Skeleton />,
-    links: "course1",
-  },
-];
+
+const Skeleton = ({
+  src,
+  alt = "Loading...",
+}: {
+  src?: string;
+  alt?: string;
+}) => {
+  return src ? (
+    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl overflow-hidden">
+      <img src={src} width="1024" height="auto" />
+    </div>
+  ) : (
+    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 animate-pulse" />
+  );
+};
+
+const CourseDescription = ({
+  description,
+  difficulty,
+  length,
+}: {
+  description: string;
+  difficulty: string;
+  length: string;
+}) => {
+  const difficultyColor =
+    difficulty.toLowerCase() === "easy"
+      ? "text-green-500"
+      : difficulty.toLowerCase() === "medium"
+      ? "text-yellow-500"
+      : difficulty.toLowerCase() === "hard"
+      ? "text-red-500"
+      : "text-gray-500"; // fallback if unknown
+
+  return (
+    <div className="text-sm text-gray-600 dark:text-gray-400 space-y-4">
+      <div>{description}</div>
+      <div className="flex items-center space-x-2">
+        <IconBook />
+        <span className={difficultyColor}> {difficulty}</span>
+      </div>
+      <div className="flex items-center space-x-2">
+        <IconClockHour1 /> <span>{length}</span>
+      </div>
+    </div>
+  );
+};

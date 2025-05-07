@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import ContinueCourseSection from "@/components/home/ContinueCourseSection";
@@ -13,7 +12,7 @@ export default function Home() {
       <Navbar />
       <FloatingNavbar />
       <HeroSection />
-      <div className="mx-10">
+      <div className="mx-10 flex flex-col gap-20 mt-24">
         <ProgressSection />
         <ContinueCourseSection />
         <PracticeSection />

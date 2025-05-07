@@ -1,8 +1,28 @@
-import React from "react";
+import { createClient } from "../../../utils/supabase/Client";
+import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
 
-const Navbar: React.FC = () => {
+export default async function Navbar() {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let avatarUrl = "/Image/profile-picture.jpg"; // default fallback
+
+  if (user) {
+    const { data: userData, error } = await supabase
+      .from("MsUser")
+      .select("image")
+      .eq("uuid", user.id)
+      .single();
+
+    if (!error && userData?.image) {
+      avatarUrl = userData.image;
+    }
+  }
+
   return (
     <nav className="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200">
       {/* Logo */}
@@ -27,16 +47,14 @@ const Navbar: React.FC = () => {
       <div className="flex items-center rounded-full">
         <Link href="/profile" className="flex items-center rounded-full">
           <Image
-            src="/Image/profile-picture.jpg"
+            src={avatarUrl}
             alt="Profile Picture"
             width={40}
             height={40}
-            className="rounded-full border border-gray-300"
+            className="rounded-full border border-gray-300 object-cover"
           />
         </Link>
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}

@@ -8,14 +8,16 @@ import FooterSection from "@/components/home/FooterSection";
 
 export default async function Profile() {
   return (
-    <div className="relative  w-full h-screen">
+    <div className="relative  w-full ">
       <Navbar />
       <FloatingNavbar />
-      <div className="flex md:flex-row justify-center mx-auto w-fit items-center gap-10 flex-col mt-24">
-        <ProfilePicture />
-        <ProfileStats />
+      <div className="mx-10 flex flex-col gap-20 mt-24">
+        <div className="flex md:flex-row justify-center mx-auto w-fit items-center gap-10 flex-col">
+          <ProfilePicture />
+          <ProfileStats />
+        </div>
+        <ContinueCourseSection className="mb-32" />
       </div>
-      <ContinueCourseSection />
       <FooterSection />
     </div>
   );
