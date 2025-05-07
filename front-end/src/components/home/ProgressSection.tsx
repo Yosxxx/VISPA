@@ -52,14 +52,18 @@ const ProgressSection = () => {
   }, []);
 
   return (
-    <div className="max-w-4xl mx-auto py-6 flex flex-col md:flex-row md:items-center md:justify-between">
-      <div className="mb-4 md:mb-0 text-center md:text-left">
+    <div className="max-w-6xl py-6 flex flex-col md:flex-row md:items-center md:justify-evenly">
+      <div className="mb-4 md:mb-0 text-left md:text-left pr-5">
         <h2 className="text-2xl font-bold text-black dark:text-white">
           Your Progress
         </h2>
         <p className="text-sm text-gray-500">Keep up the great work!</p>
       </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+        <div>
+          <p className="text-3xl  font-bold text-purple-600"></p>
+          <p className="text-md text-purple-600 dark:text-gray-300"></p>
+        </div>
         <div>
           <p className="text-3xl  font-bold text-purple-600">
             {stats.streak_days}
@@ -68,14 +72,7 @@ const ProgressSection = () => {
             Day Streak
           </p>
         </div>
-        <div>
-          <p className="text-xl font-semibold text-blue-600">
-            {stats.signs_learned}
-          </p>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
-            Signs Learned
-          </p>
-        </div>
+
         <div>
           <p className="text-xl font-semibold text-blue-600">
             {stats.completed_lessons}
@@ -84,6 +81,7 @@ const ProgressSection = () => {
             Lessons Completed
           </p>
         </div>
+
         <div>
           <p className="text-xl font-semibold text-blue-600">{stats.score}</p>
           <p className="text-sm text-gray-600 dark:text-gray-300">

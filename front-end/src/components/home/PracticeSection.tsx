@@ -45,12 +45,12 @@ const items = [
     title: "Real-time Practice",
     description: "Practice signs with AI-powered feedback",
     buttonDescription: "Start Practice",
-    links: "course1",
+    links: "/play",
   },
   {
     title: "Daily Challenge",
     description: "Complete today’s challenge to earn rewards",
     buttonDescription: "Take Challenge",
-    links: "course1",
+    links: "/play",
   },
 ];

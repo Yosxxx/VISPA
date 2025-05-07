@@ -17,7 +17,7 @@ export default async function ContinueCourseSection({
   const { data: courses, error } = await supabase
     .from("MsCourses")
     .select("id, course_name, description, image, dificulty, length")
-    .limit(4);
+    .limit(3);
 
   if (error || !courses) {
     console.error("Error fetching courses:", error?.message);

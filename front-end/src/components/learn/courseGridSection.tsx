@@ -31,7 +31,7 @@ export default async function CourseGridSection() {
       <h2 className="text-3xl font-bold text-black dark:text-white my-5 text-center md:text-left max-w-3/4">
         Courses
       </h2>
-      <div className="mx-auto grid max-w-3/4 grid-cols-1 gap-6 md:auto-rows-[18rem] md:grid-cols-3  my-12">
+      <div className="mx-auto grid max-w-3/4 grid-cols-1 gap-6  md:grid-cols-3  my-12">
         {courses?.map((course, i) => (
           <BentoGridItem
             key={course.id}

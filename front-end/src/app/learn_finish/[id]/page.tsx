@@ -30,7 +30,7 @@ export default async function CourseCompletionPage(props: {
   }
 
   // ✅ Run this during page rendering (server-side)
-  await addCourseCompletion(course.id, course.score);
+  await addCourseCompletion(course.id, course.points);
 
   return (
     <div className="flex flex-col justify-center items-center h-screen bg-gray-50 px-4 text-center">

@@ -16,7 +16,7 @@ export async function addCourseCompletion(courseId: number, points: number) {
 
   const { data: userData, error: fetchError } = await (await supabase)
     .from("MsUser")
-    .select("completed_lessons, points")
+    .select("completed_lessons, score")
     .eq("uuid", user.id)
     .single();
 
@@ -27,16 +27,22 @@ export async function addCourseCompletion(courseId: number, points: number) {
 
   const currentCourses = userData.completed_lessons || [];
 
+  // ✅ Prevent re-completion: check if course is already completed
+  if (currentCourses.includes(courseId)) {
+    console.log(`Course ID ${courseId} already completed by user.`);
+    return;
+  }
+
   // Only add if not already present
   const updatedCourses = Array.isArray(currentCourses)
     ? [...new Set([...currentCourses, courseId])]
     : [courseId];
 
-  const updatedPoints = (userData.points || 0) + points;
+  const updatedPoints = (userData.score || 0) + points;
 
   const { error: updateError } = await (await supabase)
     .from("MsUser")
-    .update({ completed_lessons: updatedCourses, points: updatedPoints })
+    .update({ completed_lessons: updatedCourses, score: updatedPoints })
     .eq("uuid", user.id);
 
   if (updateError) {

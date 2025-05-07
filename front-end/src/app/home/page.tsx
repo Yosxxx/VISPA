@@ -12,7 +12,7 @@ export default function Home() {
       <Navbar />
       <FloatingNavbar />
       <HeroSection />
-      <div className="mx-10 flex flex-col gap-20 mt-24">
+      <div className="flex flex-col gap-20 mt-24  justify-center items-center">
         <ProgressSection />
         <ContinueCourseSection />
         <PracticeSection />
