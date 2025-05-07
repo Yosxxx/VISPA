@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { BarChart2, BookOpen, CheckCircle, Flame, Star } from "lucide-react";
-import { supabase } from "../../../lib/supabaseClient";
+import { createClient } from "../../../utils/supabase/Client";
+const supabase = createClient();
 
 export default function ProfileStats() {
   const [stats, setStats] = useState({

@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { supabase } from "../../../lib/supabaseClient";
+import { createClient } from "../../../utils/supabase/Client";
+
+const supabase = await createClient();
 
 const ProgressSection = () => {
   const [stats, setStats] = useState({

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { supabase } from "../../../lib/supabaseClient";
+import { createClient } from "../../../utils/supabase/Client";
+const supabase = createClient();
 
 export default function ProfilePicture() {
   const [profile, setProfile] = useState<{

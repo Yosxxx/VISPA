@@ -3,8 +3,8 @@ import Navbar from "@/components/ui/navbar";
 import VideoComponent from "@/components/ui/video-component";
 import { IconArrowRight } from "@tabler/icons-react";
 import Link from "next/link";
-import { supabase } from "../../../../lib/supabaseClient";
-import { cookies } from "next/headers";
+import { createClient } from "../../../../utils/supabase/Client";
+const supabase = createClient();
 
 interface Course {
   id: number;

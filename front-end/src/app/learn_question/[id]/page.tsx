@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { supabase } from "../../../../lib/supabaseClient";
+import { createClient } from "../../../../utils/supabase/Client";
+const supabase = createClient();
 import QuizClient from "@/components/learn/quizclient";
 interface Question {
   id: number;

@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { supabase } from "../../../../lib/supabaseClient";
+import { createClient } from "../../../../utils/supabase/Client";
+const supabase = createClient();
 
 interface Course {
   id: number;
