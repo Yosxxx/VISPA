@@ -13,7 +13,8 @@ interface Question {
     course_name: string;
   };
 }
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const { data: questions } = await supabase
     .from("Questions")
     .select("*, MsCourses(course_name)")

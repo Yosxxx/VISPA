@@ -15,11 +15,12 @@ interface Course {
   video: string;
 }
 
-export default async function DriveVideoPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function DriveVideoPage(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const { data: course, error } = await supabase
     .from("MsCourses")
     .select("*")

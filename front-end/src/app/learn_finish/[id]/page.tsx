@@ -15,11 +15,12 @@ interface Course {
 
 export const dynamic = "force-dynamic"; // ensure SSR on every request
 
-export default async function CourseCompletionPage({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function CourseCompletionPage(
+  props: {
+    params: Promise<{ id: string }>;
+  }
+) {
+  const params = await props.params;
   const { data: course, error } = await supabase
     .from("MsCourses")
     .select("*")
