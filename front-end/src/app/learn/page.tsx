@@ -5,6 +5,7 @@ import CourseGridSection from "@/components/learn/courseGridSection";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import CourseGridLoading from "@/components/learn/courseGridLoading";
+import FooterSection from "@/components/home/FooterSection";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
       <Suspense fallback={<CourseGridLoading />}>
         <CourseGridSection />
       </Suspense>
+      <FooterSection />
     </div>
   );
 }

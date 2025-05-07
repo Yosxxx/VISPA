@@ -5,6 +5,7 @@ import { Strings } from "@/constants/Strings";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
 import { IconCameraOff } from "@tabler/icons-react";
+import FooterSection from "@/components/home/FooterSection";
 
 // Main Camera Component
 const Camera: React.FC = () => {
@@ -227,6 +228,7 @@ const Camera: React.FC = () => {
           {HandPrediction}
         </h2>
       </div>
+      <FooterSection />
     </div>
   );
 };

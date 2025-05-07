@@ -60,7 +60,10 @@ export default function ProfilePicture() {
         />
       </div>
 
-      <h2 className="text-xl font-semibold">{profile.name}</h2>
+      <h2 className="text-xl font-semibold">
+        {profile.name.charAt(0).toUpperCase() +
+          profile.name.slice(1).toLowerCase()}
+      </h2>
       <p className="text-sm text-gray-600 dark:text-gray-400">
         Joined {joinedDate}
       </p>
