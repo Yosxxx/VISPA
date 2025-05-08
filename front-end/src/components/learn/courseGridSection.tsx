@@ -59,7 +59,7 @@ const Skeleton = ({
 }) => {
   return src ? (
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl overflow-hidden">
-      <img src={src} width="1024" height="auto" />
+      <img src={src} width="1024" height="auto" className="object-cover" />
     </div>
   ) : (
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 animate-pulse" />

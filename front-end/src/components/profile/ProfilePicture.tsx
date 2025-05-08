@@ -54,7 +54,7 @@ export default function ProfilePicture() {
 
       <div className="w-40 h-40 relative mb-4">
         <img
-          src={profile.profile_picture || "/Image/default-profile.jpg"}
+          src={profile.profile_picture || "/Image/profile-picture.jpg"}
           alt="Profile Picture"
           className="rounded-full border-2 border-white shadow-md"
         />
