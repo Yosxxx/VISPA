@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Progress } from "@/components/ui/progress";
-import { BarChart2, BookOpen, CheckCircle, Flame, Star } from "lucide-react";
+import { BarChart2, BookOpen, Flame, Star } from "lucide-react";
 import { createClient } from "../../../utils/supabase/Client";
 const supabase = createClient();
 
@@ -39,7 +39,7 @@ export default function ProfileStats() {
         return;
       }
 
-      const { count, error: courseCountError } = await supabase
+      const { count } = await supabase
         .from("MsCourses")
         .select("*", { count: "exact", head: true });
 

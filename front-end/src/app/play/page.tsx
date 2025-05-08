@@ -11,10 +11,10 @@ import FooterSection from "@/components/home/FooterSection";
 const Camera: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const [handPresence, setHandPresence] = useState<boolean | null>(null);
+  // const [handPresence, setHandPresence] = useState<boolean | null>(null);
   const [HandPrediction, setHandPrediction] = useState<string>("No Character");
 
-  const [displayList, setDisplayList] = useState<string[]>([]);
+  // const [displayList, setDisplayList] = useState<string[]>([]);
   const [indexList, setIndexList] = useState<number>(0);
   const [prevIndexList, setPrevIndexList] = useState<number>(-1);
   const previousValueRef = useRef<string | null>(null);
@@ -23,8 +23,8 @@ const Camera: React.FC = () => {
   const exampleString = Strings;
   const [availableIndices, setAvailableIndices] = useState<number[]>([]);
   const [targetString, setTargetString] = useState<string[]>([]);
-  const [targetStringIndex, setTargetStringIndex] = useState<number>(0);
-  const [Points, setPoints] = useState<number>(0);
+  // const [targetStringIndex, setTargetStringIndex] = useState<number>(0);
+  // const [Points, setPoints] = useState<number>(0);
 
   const [isCameraOn, setIsCameraOn] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -48,7 +48,7 @@ const Camera: React.FC = () => {
     if (availableIndices.length > 0) {
       const randomIndex = pickRandomIndex();
       setTargetString(exampleString[randomIndex]);
-      setTargetStringIndex(randomIndex);
+      // setTargetStringIndex(randomIndex);
     } else {
       console.log("No more strings available.");
       // Optional: Reset or finish the game
@@ -60,11 +60,11 @@ const Camera: React.FC = () => {
       if (availableIndices.length > 0) {
         const randomIndex = pickRandomIndex();
         setTargetString(exampleString[randomIndex]);
-        setTargetStringIndex(randomIndex);
+        // setTargetStringIndex(randomIndex);
         setIndexList(0);
         setPrevIndexList(-1);
-        setPoints((p) => p + 100);
-        setDisplayList([]);
+        // setPoints((p) => p + 100);
+        // setDisplayList([]);
       } else {
         console.log("No more strings available.");
         // Optional: Reset, reshuffle, or end
@@ -83,7 +83,7 @@ const Camera: React.FC = () => {
           HandPrediction !== "No Character" &&
           HandPrediction === targetString[indexList]
         ) {
-          setDisplayList((l) => [...l, HandPrediction]);
+          // setDisplayList((l) => [...l, HandPrediction]);
           setPrevIndexList(prevIndexList === -1 ? 0 : indexList);
           setIndexList((i) => i + 1);
         }
@@ -121,7 +121,7 @@ const Camera: React.FC = () => {
 
             if (response.ok) {
               const data = await response.json();
-              setHandPresence(data.hands_detected);
+              // setHandPresence(data.hands_detected);
               setHandPrediction(data.predicted_character);
             } else {
               console.error("Response failed:", response.statusText);

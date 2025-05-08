@@ -4,12 +4,6 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
-interface Course {
-  id: number;
-  course_name: string;
-  points: number;
-}
-
 export const dynamic = "force-dynamic"; // ensure SSR on every request
 
 export default async function CourseCompletionPage(props: {

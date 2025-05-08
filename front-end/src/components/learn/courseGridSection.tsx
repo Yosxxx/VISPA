@@ -5,15 +5,6 @@ import { createClient } from "../../../utils/supabase/Client";
 
 export const dynamic = "force-dynamic"; // if you want fresh SSR every time
 
-interface Course {
-  id: number;
-  course_name: string;
-  description: string;
-  dificulty: string;
-  length: number;
-  image: string;
-}
-
 export default async function CourseGridSection() {
   const supabase = createClient();
   const { data: courses, error } = await supabase
@@ -32,7 +23,7 @@ export default async function CourseGridSection() {
         Courses
       </h2>
       <div className="mx-auto grid max-w-3/4 grid-cols-1 gap-6  md:grid-cols-3  my-12">
-        {courses?.map((course, i) => (
+        {courses?.map((course) => (
           <BentoGridItem
             key={course.id}
             title={course.course_name}
@@ -50,13 +41,7 @@ export default async function CourseGridSection() {
     </div>
   );
 }
-const Skeleton = ({
-  src,
-  alt = "Loading...",
-}: {
-  src?: string;
-  alt?: string;
-}) => {
+const Skeleton = ({ src }: { src?: string; alt?: string }) => {
   return src ? (
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl overflow-hidden">
       <img src={src} width="1024" height="auto" className="object-cover" />

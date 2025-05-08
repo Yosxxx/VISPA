@@ -2,7 +2,6 @@ import React from "react";
 import FloatingNavbar from "@/components/ui/floating-navbar";
 import Navbar from "@/components/ui/navbar";
 import CourseGridSection from "@/components/learn/courseGridSection";
-import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import CourseGridLoading from "@/components/learn/courseGridLoading";
 import FooterSection from "@/components/home/FooterSection";

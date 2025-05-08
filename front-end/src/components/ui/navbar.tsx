@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
+
 import Link from "next/link";
 import { createClient } from "../../../utils/supabase/Client";
 
@@ -15,7 +15,7 @@ const Navbar: React.FC = () => {
       } = await supabase.auth.getUser();
 
       if (user) {
-        const { data, error } = await supabase
+        const { data } = await supabase
           .from("MsUser")
           .select("name, profile_picture, created_at")
           .eq("uuid", user.id)

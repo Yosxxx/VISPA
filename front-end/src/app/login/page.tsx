@@ -3,10 +3,9 @@
 import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import FloatingNavbar from "@/components/ui/floating-navbar";
-import Navbar from "@/components/ui/navbar";
+
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+
 import { login, signup } from "./action";
 import { useState } from "react";
 

@@ -1,7 +1,7 @@
 import { createClient } from "../../../utils/supabase/Client";
-import { BentoGrid, BentoGridItem } from "../ui/bento-grid";
+import { BentoGridItem } from "../ui/bento-grid";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+
 import { IconClockHour1 } from "@tabler/icons-react";
 import { IconBook } from "@tabler/icons-react";
 
@@ -49,13 +49,7 @@ export default async function ContinueCourseSection({
   );
 }
 
-const Skeleton = ({
-  src,
-  alt = "Loading...",
-}: {
-  src?: string;
-  alt?: string;
-}) => {
+const Skeleton = ({ src }: { src?: string; alt?: string }) => {
   return src ? (
     <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl overflow-hidden">
       <img src={src} width="1024" height="auto" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+
 import { createClient } from "../../../utils/supabase/Client";
 const supabase = createClient();
 

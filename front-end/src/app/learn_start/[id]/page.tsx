@@ -6,20 +6,9 @@ import Link from "next/link";
 import { createClient } from "../../../../utils/supabase/Client";
 const supabase = createClient();
 
-interface Course {
-  id: number;
-  course_name: string;
-  description: string;
-  dificulty: string;
-  length: number;
-  video: string;
-}
-
-export default async function DriveVideoPage(
-  props: {
-    params: Promise<{ id: string }>;
-  }
-) {
+export default async function DriveVideoPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const params = await props.params;
   const { data: course, error } = await supabase
     .from("MsCourses")
